@@ -1,4 +1,6 @@
 const express = require("express")
+const geocode=require('./Tools/geocode')
+const forecast= require('./Tools/forecast')
 
 const app= express()
 const port =process.env.PORT || 4000
@@ -7,13 +9,6 @@ const path = require("path")
 
 const pathDirectory = path.join(__dirname, '../public')
 app.use(express.static(pathDirectory))
-
-// app.get('/prices', (req,res)=>{
-//     res.send("prices page")
-// })
-app.get ( '/prices',  (req,res) =>{
-    res.send("prices page")
-}) 
 
 app.set('view engine', 'hbs');
 
@@ -33,59 +28,32 @@ app.get('/',(req, res)=>{
     })
 })
 
-app.get('/service',(req, res)=>{
-    res.render('service', {
-        title:"SERVICE",
-        desc: "Get items You Need",
-        location:"Fayoum",
-    
+
+app.get('/weather',(req,res)=>{
+    if(!req.query.address){
+        return res.send({
+            error:"You must provide Address"
+        })
+    }
+    geocode(req.query.address,(error,data)=>{
+        if(error){
+            return res.send({error})
+        }
+        forecast(data.longtitude , data.latitude,(error,forecastData)=>{
+            if(error){
+                return res.send({error})
+            }
+            res.send({
+                forecast : forecastData,
+                location : req.query.address,
+        })
         
-    }
-    )
+        })
+    })
 })
 
-
-app.get('/team',(req, res)=>{
-    res.render('team', {
-        title:"TEAM",
-        desc: "We are at your service",
-        city:"All over the world",
-        age: "The twenties and thirties"
-        
-    }
-    )
-})
-
-app.get('/response',(req, res)=>{
-    res.render('response', {
-        title:"RESPONSE",
-        desc: "Your request will be responded to ",
-        city:"All over the world",
-    }
-    )
-})
-
-app.get('/welcome',(req, res)=>{
-    res.render('welcome', {
-        title:"WELCOME",
-        desؤ: "We are happy to have you visit",
-        city:"All over the world",
-        
-        
-    }
-    )
-})
-
-app.get('/about',(req, res)=>{
-    res.render('about', {
-        title:"ABOUT US",
-        desc: "We are an organization that strives to serve you",
-        city:"All over the world",
-    }
-    )
-})
 
 
 app.listen( port, ()=>{
-    console.log("App is listening on port 4000")
+    console.log("App is listening on port "+port)
 })

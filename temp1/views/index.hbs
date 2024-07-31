@@ -1,13 +1,22 @@
-<!DOCTYPE html>
+<html>
 <head>
     <meta lang="en" charset="UTF-8">
     <title>Home page</title>
     <link rel="stylesheet" href="stylesheet/style.css">
 </head>
 <body>
-    <h2>{{>header}}</h2>
-    <h1>{{title}}</h1>
-    <h2>{{describe}}</h2>
-    <h2>{{>footer}}</h2>
+    <div id="header">
+        <form id="form1">
+            <input type="text" id="address">
+            <button id="weatherBtn">Find Weather</button>
+        </form>
+    </div>
+    <div id="result">
+        <p id="location" class="locolor"></p>
+        <p id="forecast" class="locolor"></p>
+        <p id="error"></p>
+    </div>
+
+    <script src="script/script.js"></script>
 </body>
 </html>
